@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sudhir Mathur - Portfolio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -55,8 +56,32 @@
         }
         footer {
             background: #00334e;
-            padding: 20px;
+            padding: 30px;
             text-align: center;
+        }
+        footer p {
+            margin: 10px 0;
+        }
+        footer a {
+            text-decoration: none;
+            font-size: 1.1em;
+            margin: 0 15px;
+            padding: 12px 25px;
+            color: #00334e;
+            border-radius: 5px;
+            background-color: #ffd700;
+            display: inline-flex;
+            align-items: center;
+            transition: background-color 0.3s;
+        }
+        footer a:hover {
+            background-color: #ffb300;
+        }
+        footer a i {
+            margin-right: 10px;
+        }
+        html {
+            scroll-behavior: smooth;
         }
     </style>
 </head>
@@ -112,14 +137,24 @@
     <section id="projects" class="projects">
         <h2>Projects</h2>
         <ul>
-            <li><strong>Safety Inspection</strong>: A comprehensive inspection tool using Node.js, Postgres, and React.js.</li>
-            <li><strong>EA-Mobility</strong>: ERP system tailored for a construction company, built with Next.js and Node.js.</li>
+            <li><strong>Safety Inspection</strong>: A heavy machine inspection ERP where I led the design of the database architecture, built the frontend and backend from scratch, and created custom components such as a form builder. Key challenges included migrating client data to the new system and integrating Dropbox with AWS S3. I also guided the team on best practices.</li>
+            <li><strong>EA-Mobility</strong>: An ERP for designing bathrooms for disabled individuals, managing roles such as project management, inventory, HRM, finance, and warehouse. I led the entire project flow, estimated tasks, and distributed work based on developers' expertise.</li>
         </ul>
     </section>
 
     <footer>
-        <p>Contact me at <a href="mailto:mathursudhir12@gmail.com" style="color: #ffd700;">mathursudhir12@gmail.com</a></p>
-        <p>LinkedIn: <a href="https://linkedin.com/in/sudhir-mathur-87ba45108" target="_blank" style="color: #ffd700;">linkedin.com/in/sudhir-mathur-87ba45108</a></p>
+        <p>Contact me:</p>
+        <div style="text-align: center; margin-top: 10px;">
+            <a href="mailto:mathursudhir12@gmail.com">
+                <i class="fas fa-envelope" style="margin-right: 10px;"></i> Email
+            </a>
+            <a href="https://linkedin.com/in/sudhir-mathur-87ba45108" target="_blank">
+                <i class="fab fa-linkedin" style="margin-right: 10px;"></i> LinkedIn
+            </a>
+            <a href="resume.pdf" download="Sudhir_Mathur_Resume.pdf" style="text-decoration: none; background-color: #28a745; color: #fff; font-size: 1.1em; padding: 12px 25px; border-radius: 5px; display: inline-flex; align-items: center; transition: background-color 0.3s; margin-top: 10px;">
+                <i class="fas fa-file-download" style="margin-right: 10px;"></i> Download Resume
+            </a>
+        </div>
     </footer>
 </body>
 </html>

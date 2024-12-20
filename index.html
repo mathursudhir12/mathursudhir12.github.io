@@ -1,10 +1,125 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Welcome to My Profile</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sudhir Mathur - Portfolio</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to bottom, #002f4b, #dc4225);
+            color: #fff;
+        }
+        header {
+            background: #00334e;
+            padding: 20px;
+            text-align: center;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+        header p {
+            margin: 10px 0 0;
+            font-size: 1.2em;
+        }
+        nav {
+            margin-top: 15px;
+        }
+        nav a {
+            margin: 0 10px;
+            text-decoration: none;
+            color: #ffd700;
+            font-weight: bold;
+        }
+        section {
+            padding: 40px 20px;
+        }
+        .about, .experience, .skills, .projects {
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .skills ul, .projects ul {
+            list-style: none;
+            padding: 0;
+        }
+        .skills li, .projects li {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px 15px;
+            margin: 5px;
+            border-radius: 5px;
+        }
+        footer {
+            background: #00334e;
+            padding: 20px;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-    <h1>Hello, I'm Sudhir Mathur developer</h1>
-    <p>Welcome to my GitHub Pages profile page!</p>
+    <header>
+        <h1>Sudhir Mathur</h1>
+        <p>Senior Software Developer | React.js & Node.js Specialist</p>
+        <nav>
+            <a href="#about">About</a>
+            <a href="#experience">Experience</a>
+            <a href="#skills">Skills</a>
+            <a href="#projects">Projects</a>
+        </nav>
+    </header>
+
+    <section id="about" class="about">
+        <h2>About Me</h2>
+        <p>
+            I am a seasoned software engineer with over 6 years of experience, including 5+ years specializing in
+            ReactJS and Node.js. Proficient in designing and developing REST APIs, delivering robust, scalable, and high-performance
+            solutions. I thrive in collaborative environments, driving project success, and staying updated with the latest technologies.
+        </p>
+    </section>
+
+    <section id="experience" class="experience">
+        <h2>Experience</h2>
+        <div>
+            <h3>Senior Full Stack Engineer Level III</h3>
+            <p><strong>Matellio Inc, Jodhpur</strong> | Dec 2021 - Present</p>
+            <p>Focused on creating user-friendly admin panels, leading a team, and ensuring high-quality deliverables.</p>
+
+            <h3>Web Developer</h3>
+            <p><strong>Square Bits Pvt Ltd, Jodhpur</strong> | Jun 2019 - Nov 2021</p>
+            <p>Led frontend architecture development, implemented component-based designs, and mentored junior developers.</p>
+        </div>
+    </section>
+
+    <section id="skills" class="skills">
+        <h2>Skills</h2>
+        <ul>
+            <li>React.js</li>
+            <li>Node.js</li>
+            <li>Express.js</li>
+            <li>MongoDB</li>
+            <li>GraphQL</li>
+            <li>TypeScript</li>
+            <li>AWS</li>
+            <li>Jenkins</li>
+            <li>CI/CD</li>
+        </ul>
+    </section>
+
+    <section id="projects" class="projects">
+        <h2>Projects</h2>
+        <ul>
+            <li><strong>Safety Inspection</strong>: A comprehensive inspection tool using Node.js, Postgres, and React.js.</li>
+            <li><strong>EA-Mobility</strong>: ERP system tailored for a construction company, built with Next.js and Node.js.</li>
+        </ul>
+    </section>
+
+    <footer>
+        <p>Contact me at <a href="mailto:mathursudhir12@gmail.com" style="color: #ffd700;">mathursudhir12@gmail.com</a></p>
+        <p>LinkedIn: <a href="https://linkedin.com/in/sudhir-mathur-87ba45108" target="_blank" style="color: #ffd700;">linkedin.com/in/sudhir-mathur-87ba45108</a></p>
+    </footer>
 </body>
 </html>

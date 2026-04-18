@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Sudhir Mathur — Full Stack Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:        #080c14;
+    --bg2:       #0d1220;
+    --bg3:       #111827;
+    --cyan:      #00f0c0;
+    --cyan2:     #00c9a7;
+    --blue:      #3b82f6;
+    --purple:    #8b5cf6;
+    --text:      #e2e8f0;
+    --muted:     #64748b;
+    --border:    rgba(0,240,192,0.12);
+    --card:      rgba(13,18,32,0.8);
+    --mono:      'Space Mono', monospace;
+    --display:   'Syne', sans-serif;
+    --body:      'DM Sans', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--body);
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    width: 10px; height: 10px;
+    background: var(--cyan);
+    border-radius: 50%;
+    position: fixed; top: 0; left: 0;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.1s ease;
+    mix-blend-mode: difference;
+  }
+  .cursor-ring {
+    width: 36px; height: 36px;
+    border: 1.5px solid var(--cyan);
+    border-radius: 50%;
+    position: fixed; top: 0; left: 0;
+    pointer-events: none;
+    z-index: 9998;
+    transition: transform 0.18s ease, width 0.2s, height 0.2s;
+    opacity: 0.5;
+  }
+
+  /* Noise texture overlay */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 0; opacity: 0.4;
+  }
+
+  /* Grid background */
+  body::after {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(rgba(0,240,192,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,240,192,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none; z-index: 0;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.2rem 3rem;
+    background: rgba(8,12,20,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: var(--mono);
+    font-size: 0.9rem;
+    color: var(--cyan);
+    letter-spacing: 0.05em;
+  }
+  .nav-logo span { color: var(--muted); }
+  .nav-links { display: flex; gap: 2rem; }
+  .nav-links a {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+    position: relative;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute; bottom: -4px; left: 0; right: 0;
+    height: 1px; background: var(--cyan);
+    transform: scaleX(0); transition: transform 0.2s;
+  }
+  .nav-links a:hover { color: var(--cyan); }
+  .nav-links a:hover::after { transform: scaleX(1); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    padding: 0 3rem;
+    position: relative; z-index: 1;
+  }
+  .hero-inner { max-width: 900px; }
+  .hero-tag {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--cyan);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    display: flex; align-items: center; gap: 0.75rem;
+  }
+  .hero-tag::before {
+    content: '';
+    display: block; width: 40px; height: 1px; background: var(--cyan);
+  }
+  .hero h1 {
+    font-family: var(--display);
+    font-size: clamp(3rem, 8vw, 6rem);
+    font-weight: 800;
+    line-height: 1.0;
+    margin-bottom: 1rem;
+  }
+  .hero h1 .name-line { display: block; color: var(--text); }
+  .hero h1 .role-line {
+    display: block;
+    background: linear-gradient(135deg, var(--cyan), var(--blue));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .hero-desc {
+    font-size: 1.05rem;
+    color: var(--muted);
+    line-height: 1.75;
+    max-width: 560px;
+    margin: 1.5rem 0 2.5rem;
+    font-weight: 300;
+  }
+  .hero-desc strong { color: var(--text); font-weight: 500; }
+  .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .btn-primary {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    padding: 0.85rem 2rem;
+    background: var(--cyan);
+    color: var(--bg);
+    border: none; border-radius: 3px;
+    cursor: pointer; text-decoration: none;
+    font-weight: 700; transition: all 0.2s;
+    text-transform: uppercase;
+  }
+  .btn-primary:hover { background: var(--cyan2); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,240,192,0.3); }
+  .btn-outline {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    padding: 0.85rem 2rem;
+    background: transparent;
+    color: var(--cyan);
+    border: 1px solid var(--cyan);
+    border-radius: 3px;
+    cursor: pointer; text-decoration: none;
+    font-weight: 400; transition: all 0.2s;
+    text-transform: uppercase;
+  }
+  .btn-outline:hover { background: rgba(0,240,192,0.08); transform: translateY(-2px); }
+
+  /* Floating stats */
+  .hero-stats {
+    display: flex; gap: 3rem; margin-top: 4rem;
+    padding-top: 2rem; border-top: 1px solid var(--border);
+  }
+  .stat-num {
+    font-family: var(--display);
+    font-size: 2.2rem; font-weight: 800;
+    color: var(--cyan); line-height: 1;
+  }
+  .stat-label {
+    font-family: var(--mono);
+    font-size: 0.68rem; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.12em;
+    margin-top: 0.3rem;
+  }
+
+  /* Orbiting blobs */
+  .blob {
+    position: absolute; border-radius: 50%;
+    filter: blur(80px); pointer-events: none; z-index: 0;
+  }
+  .blob1 { width: 500px; height: 500px; right: -100px; top: 50%; transform: translateY(-50%); background: radial-gradient(circle, rgba(59,130,246,0.15), transparent 70%); animation: float1 8s ease-in-out infinite; }
+  .blob2 { width: 300px; height: 300px; right: 200px; top: 20%; background: radial-gradient(circle, rgba(0,240,192,0.1), transparent 70%); animation: float2 6s ease-in-out infinite; }
+  @keyframes float1 { 0%,100%{transform:translateY(-50%) scale(1)} 50%{transform:translateY(-55%) scale(1.05)} }
+  @keyframes float2 { 0%,100%{transform:translateY(0) scale(1)} 50%{transform:translateY(-20px) scale(1.08)} }
+
+  /* ── SECTIONS ── */
+  section { padding: 6rem 3rem; position: relative; z-index: 1; }
+  .section-header { margin-bottom: 4rem; }
+  .section-tag {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--cyan);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+    display: flex; align-items: center; gap: 0.75rem;
+  }
+  .section-tag::before { content: '//'; color: var(--muted); }
+  .section-title {
+    font-family: var(--display);
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 800; color: var(--text); line-height: 1.1;
+  }
+  .section-title span { color: var(--cyan); }
+  .max-w { max-width: 1100px; margin: 0 auto; }
+
+  /* ── TECH STACK ── */
+  .tech-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1rem;
+  }
+  .tech-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.4rem 1rem;
+    text-align: center;
+    transition: all 0.25s;
+    cursor: default;
+    backdrop-filter: blur(10px);
+  }
+  .tech-card:hover {
+    border-color: var(--cyan);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0,240,192,0.1);
+  }
+  .tech-icon { font-size: 2rem; margin-bottom: 0.6rem; display: block; }
+  .tech-name {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--text);
+    letter-spacing: 0.05em;
+    display: block;
+  }
+  .tech-cat {
+    font-size: 0.65rem;
+    color: var(--muted);
+    margin-top: 0.2rem;
+    display: block;
+  }
+
+  /* ── PROJECTS ── */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem;
+  }
+  .project-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 2rem;
+    transition: all 0.3s;
+    backdrop-filter: blur(10px);
+    position: relative; overflow: hidden;
+  }
+  .project-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--cyan), var(--blue));
+    transform: scaleX(0); transition: transform 0.3s;
+    transform-origin: left;
+  }
+  .project-card:hover { border-color: rgba(0,240,192,0.3); transform: translateY(-5px); box-shadow: 0 20px 50px rgba(0,0,0,0.4); }
+  .project-card:hover::before { transform: scaleX(1); }
+  .project-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; }
+  .project-icon { font-size: 2rem; }
+  .project-badge {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    padding: 0.25rem 0.6rem;
+    border-radius: 100px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .badge-live { background: rgba(0,240,192,0.15); color: var(--cyan); border: 1px solid rgba(0,240,192,0.3); }
+  .badge-build { background: rgba(139,92,246,0.15); color: var(--purple); border: 1px solid rgba(139,92,246,0.3); }
+  .badge-concept { background: rgba(59,130,246,0.15); color: var(--blue); border: 1px solid rgba(59,130,246,0.3); }
+  .project-title {
+    font-family: var(--display);
+    font-size: 1.15rem; font-weight: 700;
+    color: var(--text); margin-bottom: 0.5rem;
+  }
+  .project-desc {
+    font-size: 0.875rem; color: var(--muted); line-height: 1.65;
+    margin-bottom: 1.25rem;
+  }
+  .project-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .tag {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    padding: 0.2rem 0.55rem;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 3px; color: var(--muted);
+  }
+
+  /* ── EXPERIENCE ── */
+  .timeline { position: relative; }
+  .timeline::before {
+    content: ''; position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 1px; background: var(--border);
+  }
+  .tl-item {
+    padding-left: 2.5rem; margin-bottom: 3rem; position: relative;
+  }
+  .tl-dot {
+    position: absolute; left: -5px; top: 6px;
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--cyan);
+    box-shadow: 0 0 12px rgba(0,240,192,0.6);
+  }
+  .tl-date {
+    font-family: var(--mono);
+    font-size: 0.7rem; color: var(--cyan);
+    letter-spacing: 0.1em; margin-bottom: 0.5rem;
+  }
+  .tl-role {
+    font-family: var(--display);
+    font-size: 1.1rem; font-weight: 700;
+    color: var(--text); margin-bottom: 0.2rem;
+  }
+  .tl-company {
+    font-size: 0.875rem; color: var(--muted); margin-bottom: 1rem;
+  }
+  .tl-bullets { list-style: none; }
+  .tl-bullets li {
+    font-size: 0.875rem; color: var(--muted);
+    padding: 0.3rem 0; padding-left: 1.2rem; position: relative;
+    line-height: 1.6;
+  }
+  .tl-bullets li::before {
+    content: '▹'; position: absolute; left: 0; color: var(--cyan);
+  }
+
+  /* ── CONTACT ── */
+  .contact-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem; align-items: center;
+  }
+  .contact-text h3 {
+    font-family: var(--display);
+    font-size: 2rem; font-weight: 800;
+    color: var(--text); margin-bottom: 1rem; line-height: 1.2;
+  }
+  .contact-text p { color: var(--muted); line-height: 1.75; font-size: 0.95rem; }
+  .contact-links { display: flex; flex-direction: column; gap: 1rem; }
+  .contact-link {
+    display: flex; align-items: center; gap: 1rem;
+    padding: 1.1rem 1.5rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    text-decoration: none; color: var(--text);
+    font-size: 0.9rem; transition: all 0.2s;
+    backdrop-filter: blur(10px);
+  }
+  .contact-link:hover { border-color: var(--cyan); transform: translateX(6px); }
+  .contact-link-icon { font-size: 1.2rem; }
+  .contact-link-label { font-family: var(--mono); font-size: 0.7rem; color: var(--muted); }
+  .contact-link-val { font-size: 0.85rem; color: var(--text); }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2rem 3rem;
+    display: flex; justify-content: space-between; align-items: center;
+    position: relative; z-index: 1;
+  }
+  footer p { font-family: var(--mono); font-size: 0.72rem; color: var(--muted); }
+  footer span { color: var(--cyan); }
+
+  /* ── ANIMATIONS ── */
+  .fade-in { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+  /* Typewriter cursor blink */
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+  .blink { animation: blink 1s step-end infinite; }
+
+  /* Glow pulse */
+  @keyframes glow { 0%,100%{box-shadow:0 0 12px rgba(0,240,192,0.4)} 50%{box-shadow:0 0 24px rgba(0,240,192,0.8)} }
+
+  @media(max-width:768px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    section { padding: 4rem 1.5rem; }
+    .hero { padding: 0 1.5rem; }
+    .contact-inner { grid-template-columns: 1fr; }
+    footer { flex-direction: column; gap: 0.5rem; text-align: center; }
+    .hero-stats { gap: 2rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<div id="root"></div>
+
+<script type="text/babel">
+const { useState, useEffect, useRef } = React;
+
+// ── Data ─────────────────────────────────────────────────────────────
+
+const TECH = [
+  { icon: "⚛️", name: "React.js", cat: "Frontend" },
+  { icon: "🔲", name: "Next.js", cat: "Frontend" },
+  { icon: "🟦", name: "TypeScript", cat: "Language" },
+  { icon: "🟨", name: "JavaScript", cat: "Language" },
+  { icon: "🟢", name: "Node.js", cat: "Backend" },
+  { icon: "🚂", name: "Express.js", cat: "Backend" },
+  { icon: "🏰", name: "NestJS", cat: "Backend" },
+  { icon: "🔄", name: "Redux", cat: "State" },
+  { icon: "🍃", name: "MongoDB", cat: "Database" },
+  { icon: "🐘", name: "PostgreSQL", cat: "Database" },
+  { icon: "🔴", name: "Redis", cat: "Cache" },
+  { icon: "☁️", name: "AWS", cat: "Cloud" },
+  { icon: "🐳", name: "Docker", cat: "DevOps" },
+  { icon: "☸️", name: "Kubernetes", cat: "DevOps" },
+  { icon: "📨", name: "Apache Kafka", cat: "Messaging" },
+  { icon: "🤖", name: "OpenAI API", cat: "AI/GenAI" },
+  { icon: "🔗", name: "LangChain", cat: "AI/GenAI" },
+  { icon: "🧪", name: "Jest", cat: "Testing" },
+];
+
+const PROJECTS = [
+  {
+    icon: "💳",
+    badge: "badge-live",
+    badgeText: "Production",
+    title: "SuperCredit — FinTech Platform",
+    desc: "Serverless FinTech platform handling financial workflows for 100K+ users. Integrates Plaid, Experian, and Stripe APIs with event-driven AWS Lambda architecture.",
+    tags: ["Node.js", "AWS Lambda", "SQS/SNS", "Aurora PostgreSQL", "Stripe", "Plaid"],
+  },
+  {
+    icon: "🎓",
+    badge: "badge-live",
+    badgeText: "Production",
+    title: "Pathway — SaaS LMS Platform",
+    desc: "Multi-tenant Learning Management System with custom course builder, SCORM integration, and real-time analytics for students, tutors, and administrators.",
+    tags: ["React.js", "Node.js", "SCORM", "RBAC", "Microservices", "PostgreSQL"],
+  },
+  {
+    icon: "🧠",
+    badge: "badge-live",
+    badgeText: "Hackathon",
+    title: "GenAI Resume Intelligence",
+    desc: "End-to-end AI-powered resume analysis platform. Evaluates candidate profiles against job requirements using LangChain + OpenAI, generates personalized interview questions.",
+    tags: ["OpenAI API", "LangChain", "n8n", "Node.js", "React.js", "Prompt Engineering"],
+  },
+  {
+    icon: "📊",
+    badge: "badge-build",
+    badgeText: "Suggested",
+    title: "DevMetrics — Team Dashboard",
+    desc: "Real-time engineering team productivity dashboard. Aggregates GitHub PRs, CI/CD pipeline stats, and deployment frequency into a live ops dashboard.",
+    tags: ["React.js", "Next.js", "Node.js", "GitHub API", "Redis", "Chart.js"],
+  },
+  {
+    icon: "🛒",
+    badge: "badge-build",
+    badgeText: "Suggested",
+    title: "NestCommerce — Microservices Shop",
+    desc: "Full-featured e-commerce engine built with NestJS microservices, Kafka event streaming, and distributed caching. Demonstrates enterprise-grade backend patterns.",
+    tags: ["NestJS", "Kafka", "Redis", "PostgreSQL", "Docker", "Kubernetes"],
+  },
+  {
+    icon: "💬",
+    badge: "badge-concept",
+    badgeText: "Suggested",
+    title: "ChatOps — AI Slack Assistant",
+    desc: "Slack bot powered by OpenAI GPT-4 that answers engineering questions, summarizes PRs, and triages alerts using RAG over your team's Confluence + GitHub docs.",
+    tags: ["OpenAI", "Node.js", "LangChain", "Slack API", "Vector DB", "AWS"],
+  },
+];
+
+const EXPERIENCE = [
+  {
+    date: "Dec 2021 — Present",
+    role: "Senior Full Stack Engineer (SDE III)",
+    company: "Matellio Inc. · Jodhpur, India",
+    bullets: [
+      "Architected distributed systems serving 100K+ users with 99.9% uptime",
+      "Reduced API response time by 60% via Redis caching & query optimization",
+      "Built event-driven microservices with Kafka & AWS SQS/SNS",
+      "Containerized apps with Docker & Kubernetes; led CI/CD pipeline automation",
+      "Integrated GenAI chatbots using OpenAI APIs & prompt engineering",
+      "Mentored 5+ engineers; drove code quality with SonarQube reviews",
+    ],
+  },
+  {
+    date: "Mar 2019 — Nov 2021",
+    role: "Full Stack Developer",
+    company: "Square Bits Pvt. Ltd. · Jodhpur, India",
+    bullets: [
+      "Built scalable React.js frontends with Redux state architecture",
+      "Improved page load performance by 40% through rendering optimization",
+      "Built RESTful APIs in Node.js/Express with JWT auth & RBAC",
+      "Mentored junior developers and enforced coding standards",
+    ],
+  },
+  {
+    date: "Jan 2018 — Feb 2019",
+    role: "Freelance Developer",
+    company: "Independent · Jodhpur, India",
+    bullets: [
+      "Delivered end-to-end web apps for multiple clients across e-commerce & services",
+      "Built responsive, scalable solutions using React.js and Node.js",
+    ],
+  },
+];
+
+// ── Hooks ─────────────────────────────────────────────────────────────
+
+function useTypewriter(words, speed = 80, pause = 1800) {
+  const [display, setDisplay] = useState('');
+  const [wi, setWi] = useState(0);
+  const [ci, setCi] = useState(0);
+  const [deleting, setDeleting] = useState(false);
+
+  useEffect(() => {
+    const word = words[wi];
+    const timeout = setTimeout(() => {
+      if (!deleting) {
+        setDisplay(word.slice(0, ci + 1));
+        if (ci + 1 === word.length) {
+          setTimeout(() => setDeleting(true), pause);
+        } else setCi(c => c + 1);
+      } else {
+        setDisplay(word.slice(0, ci - 1));
+        if (ci - 1 === 0) {
+          setDeleting(false);
+          setWi(w => (w + 1) % words.length);
+          setCi(0);
+        } else setCi(c => c - 1);
+      }
+    }, deleting ? speed / 2 : speed);
+    return () => clearTimeout(timeout);
+  }, [ci, deleting, wi, words, speed, pause]);
+
+  return display;
+}
+
+function useFadeIn() {
+  useEffect(() => {
+    const els = document.querySelectorAll('.fade-in');
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.12 });
+    els.forEach(el => obs.observe(el));
+    return () => obs.disconnect();
+  }, []);
+}
+
+// ── Components ────────────────────────────────────────────────────────
+
+function Nav() {
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const h = () => setScrolled(window.scrollY > 40);
+    window.addEventListener('scroll', h);
+    return () => window.removeEventListener('scroll', h);
+  }, []);
+  return (
+    <nav style={{ borderBottomColor: scrolled ? 'rgba(0,240,192,0.2)' : 'rgba(0,240,192,0.06)' }}>
+      <div className="nav-logo">&lt;<span>SM</span> /&gt;</div>
+      <div className="nav-links">
+        {['about','stack','projects','experience','contact'].map(s => (
+          <a key={s} href={`#${s}`}>{s}</a>
+        ))}
+      </div>
+    </nav>
+  );
+}
+
+function Hero() {
+  const typed = useTypewriter([
+    'Full Stack Engineer',
+    'MERN Stack Expert',
+    'AWS Certified Dev',
+    'GenAI Builder',
+    'System Designer',
+  ]);
+  return (
+    <div className="hero" id="about">
+      <div className="blob blob1"/>
+      <div className="blob blob2"/>
+      <div className="hero-inner">
+        <div className="hero-tag">Available for Opportunities</div>
+        <h1>
+          <span className="name-line">Sudhir Mathur</span>
+          <span className="role-line">{typed}<span className="blink">_</span></span>
+        </h1>
+        <p className="hero-desc">
+          Senior Software Engineer with <strong>7.5+ years</strong> building scalable, 
+          high-performance distributed systems. Specialized in <strong>React, Node, NestJS, 
+          Next.js</strong> and cloud-native architecture on <strong>AWS</strong>. 
+          Turning complex engineering problems into elegant, production-grade solutions.
+        </p>
+        <div className="hero-btns">
+          <a className="btn-primary" href="#projects">View Projects</a>
+          <a className="btn-outline" href="#contact">Let's Talk</a>
+        </div>
+        <div className="hero-stats">
+          {[['7.5+','Years Experience'],['100K+','Users Served'],['60%','Avg Perf Gain'],['3','Hackathon Wins']].map(([n,l]) => (
+            <div key={l}>
+              <div className="stat-num">{n}</div>
+              <div className="stat-label">{l}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function TechStack() {
+  return (
+    <section id="stack" style={{ background: 'rgba(13,18,32,0.5)' }}>
+      <div className="max-w">
+        <div className="section-header fade-in">
+          <div className="section-tag">Technologies</div>
+          <h2 className="section-title">My Tech <span>Arsenal</span></h2>
+        </div>
+        <div className="tech-grid fade-in">
+          {TECH.map(t => (
+            <div className="tech-card" key={t.name}>
+              <span className="tech-icon">{t.icon}</span>
+              <span className="tech-name">{t.name}</span>
+              <span className="tech-cat">{t.cat}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Projects() {
+  return (
+    <section id="projects">
+      <div className="max-w">
+        <div className="section-header fade-in">
+          <div className="section-tag">Portfolio</div>
+          <h2 className="section-title">Projects & <span>Work</span></h2>
+        </div>
+        <div className="projects-grid">
+          {PROJECTS.map((p, i) => (
+            <div className="project-card fade-in" key={p.title} style={{ transitionDelay: `${i * 0.08}s` }}>
+              <div className="project-header">
+                <span className="project-icon">{p.icon}</span>
+                <span className={`project-badge ${p.badge}`}>{p.badgeText}</span>
+              </div>
+              <div className="project-title">{p.title}</div>
+              <p className="project-desc">{p.desc}</p>
+              <div className="project-tags">
+                {p.tags.map(t => <span className="tag" key={t}>{t}</span>)}
+              </div>
+            </div>
+          ))}
+        </div>
+        <p style={{ fontFamily:'var(--mono)', fontSize:'0.72rem', color:'var(--muted)', marginTop:'2rem', textAlign:'center' }}>
+          🟢 Production &nbsp;|&nbsp; 🟣 In-Build &nbsp;|&nbsp; 🔵 Suggested Projects to Showcase
+        </p>
+      </div>
+    </section>
+  );
+}
+
+function Experience() {
+  return (
+    <section id="experience" style={{ background: 'rgba(13,18,32,0.5)' }}>
+      <div className="max-w">
+        <div className="section-header fade-in">
+          <div className="section-tag">Journey</div>
+          <h2 className="section-title">Work <span>Experience</span></h2>
+        </div>
+        <div className="timeline fade-in">
+          {EXPERIENCE.map(e => (
+            <div className="tl-item" key={e.role}>
+              <div className="tl-dot"/>
+              <div className="tl-date">{e.date}</div>
+              <div className="tl-role">{e.role}</div>
+              <div className="tl-company">{e.company}</div>
+              <ul className="tl-bullets">
+                {e.bullets.map(b => <li key={b}>{b}</li>)}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Contact() {
+  return (
+    <section id="contact">
+      <div className="max-w">
+        <div className="contact-inner fade-in">
+          <div className="contact-text">
+            <div className="section-tag" style={{ marginBottom:'1rem' }}>Contact</div>
+            <h3>Let's Build Something <span style={{ color:'var(--cyan)' }}>Together</span></h3>
+            <p style={{ marginTop:'1rem' }}>
+              Open to senior full-stack, backend, or engineering leadership roles. 
+              Also available for freelance projects, technical consulting, and 
+              startup collaborations. Let's connect!
+            </p>
+            <div style={{ marginTop:'2rem', display:'flex', gap:'1rem' }}>
+              <a className="btn-primary" href="mailto:sudhir.professional28@gmail.com">Send Email</a>
+              <a className="btn-outline" href="https://linkedin.com/in/sudhir-mathur-87ba45108" target="_blank">LinkedIn</a>
+            </div>
+          </div>
+          <div className="contact-links">
+            {[
+              { icon:'📧', label:'Email', val:'sudhir.professional28@gmail.com' },
+              { icon:'📱', label:'Phone', val:'(+91) 8112232241' },
+              { icon:'📍', label:'Location', val:'Jodhpur, Rajasthan, India' },
+              { icon:'🔗', label:'LinkedIn', val:'linkedin.com/in/sudhir-mathur-87ba45108' },
+            ].map(c => (
+              <div className="contact-link" key={c.label}>
+                <span className="contact-link-icon">{c.icon}</span>
+                <div>
+                  <div className="contact-link-label">{c.label}</div>
+                  <div className="contact-link-val">{c.val}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Footer() {
+  return (
+    <footer>
+      <p>© 2026 <span>Sudhir Mathur</span>. Built with React.</p>
+      <p style={{ fontFamily:'var(--mono)', fontSize:'0.68rem', color:'var(--muted)' }}>
+        Full Stack Engineer · AWS Certified · <span>Jodhpur, India</span>
+      </p>
+    </footer>
+  );
+}
+
+function App() {
+  useFadeIn();
+
+  // Custom cursor
+  useEffect(() => {
+    const c = document.getElementById('cursor');
+    const r = document.getElementById('cursorRing');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+    const move = e => { mx = e.clientX; my = e.clientY; c.style.transform = `translate(${mx-5}px,${my-5}px)`; };
+    const raf = () => {
+      rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+      r.style.transform = `translate(${rx-18}px,${ry-18}px)`;
+      requestAnimationFrame(raf);
+    };
+    window.addEventListener('mousemove', move);
+    raf();
+    return () => window.removeEventListener('mousemove', move);
+  }, []);
+
+  return (
+    <>
+      <Nav/>
+      <Hero/>
+      <TechStack/>
+      <Projects/>
+      <Experience/>
+      <Contact/>
+      <Footer/>
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>
